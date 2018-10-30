@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TempConverter</string>
+    <string name="textCelsius">° Celsius:</string>
+    <string name="textFahrenheit">° Fahrenheit:</string>
+    <string name="inputCelsius">Insert temp here</string>
+    <string name="inputFahrenheit">Insert temp here</string>
+    <string name="btnConvert">Convert</string>
+    <string name="btnReset">Reset</string>
+    <string name="warning">Please input a temperature.</string>
+</resources>

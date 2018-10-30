@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TemperaturUmrechner</string>
+    <string name="textCelsius">° Celsius:</string>
+    <string name="textFahrenheit">° Fahrenheit:</string>
+    <string name="inputCelsius">Temp hier eingeben</string>
+    <string name="inputFahrenheit">Temp hier eingeben</string>
+    <string name="btnConvert">Konvertieren</string>
+    <string name="btnReset">Zurücksetzen</string>
+    <string name="warning">Bitte eine Temperatur eingeben.</string>
+</resources>
