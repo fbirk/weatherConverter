@@ -1,25 +1,52 @@
 package com.fbirk.weatherconverter;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toolbar;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
-    int evalue = 0;
+    int eval = 0;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.barmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_credits:
+                Intent intent = new Intent(getApplicationContext(), Credits.class);
+                startActivity(intent);
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Toolbar myToolbar = findViewById(R.id.my_toolbar);
-        //setSupportActionBar(myToolbar);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         Button convert = findViewById(R.id.btnConvert); //get the id for button
         final Button reset = findViewById(R.id.btnReset);
@@ -30,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
         inputCelsius.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent ev) {
-                evalue = 1;
+                eval = 1;
                 return false;
             }
         });
 
         inputFahrenheit.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
-                evalue = 2;
+                eval = 2;
                 return false;
             }
         });
@@ -56,13 +83,13 @@ public class MainActivity extends AppCompatActivity {
         convert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (evalue == 2) {
+                if (eval == 2) {
                     try {
                         double c = (Double.parseDouble(inputFahrenheit.getEditableText().toString()) - 32) * 0.56;
                         inputCelsius.setText((int) c + "");
                     } catch (NumberFormatException e) {
                     }
-                } else if (evalue == 1) {
+                } else if (eval == 1) {
                     try {
                         double f = 1.8 * Double.parseDouble(inputCelsius.getEditableText().toString()) + 32;
                         inputFahrenheit.setText(((int) f) + "");
@@ -70,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 reset.setVisibility(View.VISIBLE);
-                evalue = 0;
+                eval = 0;
             }
         });
 

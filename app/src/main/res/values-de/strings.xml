@@ -8,4 +8,5 @@
     <string name="btnConvert">Konvertieren</string>
     <string name="btnReset">Zurücksetzen</string>
     <string name="warning">Bitte eine Temperatur eingeben.</string>
+    <string name="menuCredits">Credits</string>
 </resources>

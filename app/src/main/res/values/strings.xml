@@ -7,4 +7,7 @@
     <string name="btnConvert">Convert</string>
     <string name="btnReset">Reset</string>
     <string name="warning">Please input a temperature.</string>
+    <string name="menuCredits">Credits</string>
+    <string name="author" translatable="false">Fabian Birk</string>
+    <string name="credit" translatable="false">proudly made by</string>
 </resources>
