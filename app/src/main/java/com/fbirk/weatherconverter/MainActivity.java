@@ -6,16 +6,32 @@ import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.os.AsyncTask;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import org.json.JSONException;
+
+import com.fbirk.weatherconverter.model.Weather;
 
 public class MainActivity extends AppCompatActivity {
 
     int eval = 0;
+    private static String key = "0e1f2e5af82ca9d8d5a6291311a84096";
+    String city = "London,uk";
+
+    private TextView cityText;
+    private TextView condDescr;
+    private TextView temp;
+
+    private ImageView imgView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,6 +69,14 @@ public class MainActivity extends AppCompatActivity {
         final EditText inputCelsius = findViewById(R.id.inputCelsius);
         final EditText inputFahrenheit = findViewById(R.id.inputFahrenheit);
         final TextView warning = findViewById(R.id.warning);
+
+        TextView cityText = findViewById(R.id.cityText);
+        TextView condDescr = findViewById(R.id.descr);
+        TextView temp = findViewById(R.id.temp);
+        ImageView imgView = findViewById(R.id.img_icon);
+
+        JSONWeatherTask task = new JSONWeatherTask();
+        task.execute(new String[]{city});
 
         inputCelsius.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -95,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
                         inputFahrenheit.setText(((int) f) + "");
                     } catch (NumberFormatException e) {
                     }
+
+                } else {
+                    warning.setVisibility(View.VISIBLE);
                 }
                 reset.setVisibility(View.VISIBLE);
                 eval = 0;
@@ -109,5 +136,44 @@ public class MainActivity extends AppCompatActivity {
                 reset.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    private class JSONWeatherTask extends AsyncTask<String, Void, Weather> {
+
+        @Override
+        protected Weather doInBackground(String... params) {
+            Weather weather = new Weather();
+            System.out.println("Created Object");
+            String data = ((new WeatherHttpClient()).getWeatherData(params[0], key));
+            System.out.println("HTTP Call");
+            try {
+                System.out.println(data);
+               // weather = JSONWeatherParser.getWeather(data);
+
+                System.out.println("Got data");
+
+                // Let's retrieve the icon
+                //weather.iconData = ((new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return weather;
+        }
+
+        @Override
+        protected void onPostExecute(Weather weather) {
+            super.onPostExecute(weather);
+
+            if (weather.iconData != null && weather.iconData.length > 0) {
+                Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
+                imgView.setImageBitmap(img);
+            }
+            if (weather.location != null) {
+                cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
+                condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
+                temp.setText("" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
+            }
+        }
     }
 }
