@@ -9,5 +9,3 @@ enlightened by it.
 
 ## Screenshot
 ![Screenshot](scr_weatherConverter_screen.png)
-
-## Minor Update

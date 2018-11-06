@@ -69,7 +69,7 @@ public class WeatherHttpClient {
             try { con.disconnect(); } catch(Throwable t) {}
         }
 
-        return null;
+        return "Error";
 
     }
 

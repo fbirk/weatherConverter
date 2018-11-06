@@ -17,21 +17,15 @@ import android.os.AsyncTask;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import org.json.JSONException;
-
 import com.fbirk.weatherconverter.model.Weather;
 
 public class MainActivity extends AppCompatActivity {
 
     int eval = 0;
-    private static String key = "0e1f2e5af82ca9d8d5a6291311a84096";
+
+    private static String key = BuildConfig.API_Key;
+
     String city = "London,uk";
-
-    private TextView cityText;
-    private TextView condDescr;
-    private TextView temp;
-
-    private ImageView imgView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -69,11 +63,6 @@ public class MainActivity extends AppCompatActivity {
         final EditText inputCelsius = findViewById(R.id.inputCelsius);
         final EditText inputFahrenheit = findViewById(R.id.inputFahrenheit);
         final TextView warning = findViewById(R.id.warning);
-
-        TextView cityText = findViewById(R.id.cityText);
-        TextView condDescr = findViewById(R.id.descr);
-        TextView temp = findViewById(R.id.temp);
-        ImageView imgView = findViewById(R.id.img_icon);
 
         JSONWeatherTask task = new JSONWeatherTask();
         task.execute(new String[]{city});
@@ -143,17 +132,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Weather doInBackground(String... params) {
             Weather weather = new Weather();
-            System.out.println("Created Object");
             String data = ((new WeatherHttpClient()).getWeatherData(params[0], key));
-            System.out.println("HTTP Call");
             try {
-                System.out.println(data);
-               // weather = JSONWeatherParser.getWeather(data);
+                weather = JSONWeatherParser.getWeather(data);
 
                 System.out.println("Got data");
 
                 // Let's retrieve the icon
-                //weather.iconData = ((new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
+                weather.iconData = ((new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -166,11 +152,21 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(weather);
 
             if (weather.iconData != null && weather.iconData.length > 0) {
+                ImageView imgView = findViewById(R.id.img_icon);
+
                 Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
                 imgView.setImageBitmap(img);
             }
-            if (weather.location != null) {
-                cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
+            if (weather.location != null && weather.currentCondition != null && weather.temperature != null) {
+
+                TextView cityText = findViewById(R.id.cityText);
+                TextView condDescr = findViewById(R.id.descr);
+                TextView temp = findViewById(R.id.temp);
+
+                System.out.println(weather.location.getCity());
+                System.out.println((weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")"));
+                System.out.println("" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
+                cityText.setText(weather.location.getCity());
                 condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
                 temp.setText("" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
             }
