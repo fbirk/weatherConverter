@@ -1,6 +1,12 @@
 package com.fbirk.weatherconverter;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuInflater;
@@ -24,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
     int eval = 0;
 
     private static String key = BuildConfig.API_Key;
-
-    String city = "London,uk";
+    private SimpleLocation location;
+    private SimpleLocation lm;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,14 +64,22 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
+        if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+
+            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
+                   12345);
+        }
+        // construct a new instance of SimpleLocation
+        location = new SimpleLocation();
+        lm = location.getLocationManager(this);
+
         Button convert = findViewById(R.id.btnConvert); //get the id for button
         final Button reset = findViewById(R.id.btnReset);
+        final Button btnLiveWeather = findViewById(R.id.btnLiveWeather);
+
         final EditText inputCelsius = findViewById(R.id.inputCelsius);
         final EditText inputFahrenheit = findViewById(R.id.inputFahrenheit);
-        final TextView warning = findViewById(R.id.warning);
-
-        JSONWeatherTask task = new JSONWeatherTask();
-        task.execute(new String[]{city});
+        final TextView warning = findViewById(R.id.txtWarning);
 
         inputCelsius.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -124,6 +138,23 @@ public class MainActivity extends AppCompatActivity {
                 warning.setVisibility(View.INVISIBLE);
                 reset.setVisibility(View.INVISIBLE);
             }
+        });
+
+        btnLiveWeather.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+
+                Location l = lm.getCoordinates();
+
+                final double latitude = l.getLatitude();
+                final double longitude = l.getLongitude();
+
+                System.out.println(longitude + "  " + latitude);
+
+                String payload = "lat=" + latitude + "&lon=" + longitude;
+
+                JSONWeatherTask task = new JSONWeatherTask();
+                task.execute(new String[]{payload});
+                }
         });
     }
 

@@ -17,13 +17,14 @@
             android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/colorAccent"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:tooltipText="@string/app_name"/>
 
         <LinearLayout
+            android:id="@+id/layoutCelsius"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -46,6 +47,7 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/layoutFahrenheit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp">
@@ -66,22 +68,54 @@
                 android:inputType="number|numberSigned|numberDecimal" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnConvert"
-            android:layout_margin="16dp"
+        <LinearLayout
+            android:id="@+id/layoutButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btnConvert"/>
-        <Button
-            android:id="@+id/btnReset"
-            android:layout_margin="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btnReset"
-            android:visibility="invisible"/>
+            android:orientation="horizontal"
+            android:layout_margin="8dp">
+
+            <Button
+                android:id="@+id/btnConvert"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@color/colorAccent"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:text="@string/btnConvert"/>
+
+            <Button
+                android:id="@+id/btnLiveWeather"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@color/colorAccent"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:text="@string/btnLiveWeather"/>
+
+            <Button
+                android:id="@+id/btnReset"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@color/colorAccent"
+                android:textColor="#FFFFFF"
+                android:text="@string/btnReset"
+                android:textStyle="bold"
+                android:visibility="invisible"/>
+        </LinearLayout>
+
 
         <TextView
-            android:id="@+id/warning"
+            android:id="@+id/txtWarning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -89,35 +123,66 @@
             android:textStyle="bold"
             android:textSize="20sp"
             android:text="@string/warning"
+            android:textColor="@color/colorPrimary"
             android:visibility="invisible"/>
-        <TextView
-            android:id="@+id/temp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:text="test"/>
 
-        <TextView
-            android:id="@+id/cityText"
+        <LinearLayout
+            android:id="@+id/layoutOnlineWeather"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:text="test"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="8dp">
+            <LinearLayout
+                android:id="@+id/layoutText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/descr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:text="test"/>
+                <TextView
+                    android:id="@+id/temp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:text="test"/>
 
-        <ImageView
-            android:id="@+id/img_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/cityText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:text="test"/>
+
+                <TextView
+                    android:id="@+id/descr"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:text="test"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutImage"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
