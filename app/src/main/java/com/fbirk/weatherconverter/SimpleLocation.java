@@ -28,76 +28,39 @@ import android.os.Build;
 
 public class SimpleLocation implements LocationListener  {
 
-    //The minimum distance to change updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10 meters
-
-    //The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 0;//1000 * 60 * 1; // 1 minute
-
-    private final static boolean forceNetwork = false;
-
-    private static SimpleLocation instance = null;
-
-    public SimpleLocation() {
-
-    }
-
     private LocationManager locationManager;
-    public Location location;
-    public double longitude;
-    public double latitude;
+    private Location location;
 
     private boolean isGPSEnabled;
     private boolean isNetworkEnabled;
-    private boolean locationServiceAvailable;
+
+    private static Context context;
 
 
-    /**
-     * Singleton implementation
-     * @return
-     */
-    public static SimpleLocation getLocationManager(Context context)     {
-        if (instance == null) {
-            instance = new SimpleLocation(context);
-        }
-        return instance;
+    public SimpleLocation(final Context context) {
+        locationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        this.context = context;
     }
 
-    /**
-     * Local constructor
-     */
-    private SimpleLocation( Context context )     {
-        initLocationService(context);
-    }
-
-
-    /**
-     * Sets up location service after permissions is granted
-     */
-    private Location initLocationService(Context context) {
+    public Location getLocation() {
 
         if ( Build.VERSION.SDK_INT >= 23 &&
                 ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            System.err.println("Error");
             return null;
         }
 
         try   {
-            this.longitude = 0.0;
-            this.latitude = 0.0;
             this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
             // Get GPS and network status
             this.isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             this.isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-            System.out.println("IS GPS ENABLED? " + isGPSEnabled + "IS NETWORK ENABLED? " + isNetworkEnabled);
-
             if (!isNetworkEnabled && !isGPSEnabled) {
-                // cannot get location
-                this.locationServiceAvailable = false;
+                System.err.println("GPS and Network Location not enabled");
             } else {
-                this.locationServiceAvailable = true;
 
                 if (isNetworkEnabled) {
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
@@ -120,16 +83,12 @@ public class SimpleLocation implements LocationListener  {
         } catch (Exception ex)  {
             System.err.println(ex.getMessage());
         }
+        System.err.println("An Error occurred");
         return null;
-    }
-
-    public Location getCoordinates() {
-        return this.location;
     }
 
     @Override
     public void onLocationChanged(Location newLocation)     {
-        this.location = newLocation;
         // do stuff here with location object
     }
 

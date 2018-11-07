@@ -3,10 +3,10 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:id="@+id/mainView">
+    tools:context=".MainActivity">
 
 
     <LinearLayout
@@ -21,15 +21,15 @@
             android:background="?attr/colorAccent"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:tooltipText="@string/app_name"/>
+            android:tooltipText="@string/app_name"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <LinearLayout
             android:id="@+id/layoutCelsius"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="16dp">
+            android:layout_margin="16dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textCelsius"
@@ -47,6 +47,7 @@
                 android:inputType="number|numberSigned|numberDecimal" />
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/layoutFahrenheit"
             android:layout_width="match_parent"
@@ -73,45 +74,45 @@
             android:id="@+id/layoutButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnConvert"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
+                android:layout_weight="1"
                 android:background="@color/colorAccent"
+                android:text="@string/btnConvert"
                 android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:text="@string/btnConvert"/>
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnLiveWeather"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
+                android:layout_weight="1"
                 android:background="@color/colorAccent"
+                android:text="@string/btnLiveWeather"
                 android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:text="@string/btnLiveWeather"/>
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnReset"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
+                android:layout_weight="1"
                 android:background="@color/colorAccent"
-                android:textColor="#FFFFFF"
                 android:text="@string/btnReset"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
         </LinearLayout>
 
 
@@ -121,22 +122,23 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="20sp"
             android:text="@string/warning"
             android:textColor="@color/colorPrimary"
-            android:visibility="invisible"/>
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
         <LinearLayout
             android:id="@+id/layoutOnlineWeather"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:orientation="vertical">
+
             <LinearLayout
                 android:id="@+id/layoutText"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -146,37 +148,58 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/cityText"
+                    android:id="@+id/tempMax"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/descr"
+                    android:id="@+id/tempMin"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
+
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/cityText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:id="@+id/layoutImage"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/descr"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp" />
+
 
                 <ImageView
                     android:id="@+id/img_icon"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:layout_weight="1" />
+
+
             </LinearLayout>
 
         </LinearLayout>
