@@ -74,14 +74,12 @@ public class SimpleLocation implements LocationListener  {
     /**
      * Sets up location service after permissions is granted
      */
-    private void initLocationService(Context context) {
-        System.out.println("INITIALIZE");
+    private Location initLocationService(Context context) {
 
         if ( Build.VERSION.SDK_INT >= 23 &&
                 ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                System.err.println("PERMISSION DENIED");
-            return  ;
+            return null;
         }
 
         try   {
@@ -103,45 +101,38 @@ public class SimpleLocation implements LocationListener  {
 
                 if (isNetworkEnabled) {
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                            0,
+                            0, this);
                     if (locationManager != null)   {
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        updateCoordinates(location);
+                        return location;
                     }
                 } else if(isGPSEnabled)  {
                     System.out.println("TEEEEEEEEEESSSSSSSSST");
 
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
                     System.out.println("HALLLLLLOOOOOOOOO");
                     System.out.println(locationManager.toString());
                     if (locationManager != null)  {
                         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        updateCoordinates(location);
-
-                        System.out.println("Location: " + location.getLatitude() + "/" + location.getLongitude());
-                    }
+                        return location;
+                        }
                 }
             }
         } catch (Exception ex)  {
 
         }
-    }
-
-    private void updateCoordinates(Location location) {
-        this.location = location;
+        return null;
     }
 
     public Location getCoordinates() {
-        System.out.println(this.location.getLatitude());
         return this.location;
     }
 
     @Override
-    public void onLocationChanged(Location location)     {
+    public void onLocationChanged(Location newLocation)     {
+        this.location = newLocation;
         // do stuff here with location object
     }
 

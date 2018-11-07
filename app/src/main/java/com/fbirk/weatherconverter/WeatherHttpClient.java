@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 /*
  * Copyright (C) 2013 Surviving with Android (http://www.survivingwithandroid.com)
  *
@@ -34,9 +36,8 @@ import java.net.URL;
  */
 public class WeatherHttpClient {
 
-    private static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
+    private static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?";
     private static String IMG_URL = "http://openweathermap.org/img/w/";
-
 
     public String getWeatherData(String location, String APIKEY) {
         HttpURLConnection con = null ;
@@ -73,25 +74,19 @@ public class WeatherHttpClient {
 
     }
 
-    public byte[] getImage(String code) {
+    public Bitmap getImage(String code) {
         HttpURLConnection con = null ;
         InputStream is = null;
         try {
-            con = (HttpURLConnection) ( new URL(IMG_URL + code)).openConnection();
+            con = (HttpURLConnection) ( new URL(IMG_URL + code + ".png")).openConnection();
             con.setRequestMethod("GET");
             con.setDoInput(true);
-            con.setDoOutput(true);
             con.connect();
 
             // Let's read the response
             is = con.getInputStream();
-            byte[] buffer = new byte[1024];
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-            while ( is.read(buffer) != -1)
-                baos.write(buffer);
-
-            return baos.toByteArray();
+            Bitmap myBitmap = BitmapFactory.decodeStream(is);
+            return myBitmap;
         }
         catch(Throwable t) {
             t.printStackTrace();

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,18 +19,18 @@ import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.os.AsyncTask;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.support.design.widget.Snackbar;
 
 import com.fbirk.weatherconverter.model.Weather;
 
 public class MainActivity extends AppCompatActivity {
 
-    int eval = 0;
-
+    private int eval = 0;
     private static String key = BuildConfig.API_Key;
     private SimpleLocation location;
     private SimpleLocation lm;
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    private boolean permissionGranted = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,7 +51,25 @@ public class MainActivity extends AppCompatActivity {
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    permissionGranted = true;
+
+                    // construct a new instance of SimpleLocation
+                    location = new SimpleLocation();
+                    lm = location.getLocationManager(this);
+                }
+                break;
+             default:
+                permissionGranted = false;
+                System.err.println("Permission denied!");
+                Snackbar.make(findViewById(R.id.mainView), "You Denied permission", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -64,14 +81,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+        if ( ContextCompat.checkSelfPermission( this, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
 
-            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
-                   12345);
+            ActivityCompat.requestPermissions( this, new String[] {  Manifest.permission.ACCESS_FINE_LOCATION  },
+                    PERMISSION_REQUEST_CODE);
         }
-        // construct a new instance of SimpleLocation
-        location = new SimpleLocation();
-        lm = location.getLocationManager(this);
 
         Button convert = findViewById(R.id.btnConvert); //get the id for button
         final Button reset = findViewById(R.id.btnReset);
@@ -142,19 +156,21 @@ public class MainActivity extends AppCompatActivity {
 
         btnLiveWeather.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                if (permissionGranted) {
 
-                Location l = lm.getCoordinates();
+                    Location l = lm.getCoordinates();
 
-                final double latitude = l.getLatitude();
-                final double longitude = l.getLongitude();
+                    final double latitude = l.getLatitude();
+                    final double longitude = l.getLongitude();
 
-                System.out.println(longitude + "  " + latitude);
+                    System.out.println(longitude + "  " + latitude);
 
-                String payload = "lat=" + latitude + "&lon=" + longitude;
+                    String payload = "lat=" + latitude + "&lon=" + longitude;
 
-                JSONWeatherTask task = new JSONWeatherTask();
-                task.execute(new String[]{payload});
+                    JSONWeatherTask task = new JSONWeatherTask();
+                    task.execute(new String[]{payload});
                 }
+            }
         });
     }
 
@@ -181,25 +197,31 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Weather weather) {
             super.onPostExecute(weather);
+            double tmp;
+            TextView cityText = findViewById(R.id.cityText);
+            TextView condDescr = findViewById(R.id.descr);
+            TextView temp = findViewById(R.id.temp);
+            EditText inputCelsius = findViewById(R.id.inputCelsius);
+            EditText inputFahrenheit = findViewById(R.id.inputFahrenheit);
+            ImageView imgView = findViewById(R.id.img_icon);
+            Button reset = findViewById(R.id.btnReset);
 
-            if (weather.iconData != null && weather.iconData.length > 0) {
-                ImageView imgView = findViewById(R.id.img_icon);
 
-                Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
-                imgView.setImageBitmap(img);
+            if (weather.iconData != null) {
+
+                imgView.setImageBitmap(weather.iconData);
             }
             if (weather.location != null && weather.currentCondition != null && weather.temperature != null) {
 
-                TextView cityText = findViewById(R.id.cityText);
-                TextView condDescr = findViewById(R.id.descr);
-                TextView temp = findViewById(R.id.temp);
-
-                System.out.println(weather.location.getCity());
-                System.out.println((weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")"));
-                System.out.println("" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
-                cityText.setText(weather.location.getCity());
+                cityText.setText(weather.location.getCity() + ", " + weather.location.getCountry());
                 condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
-                temp.setText("" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
+                tmp = Math.round(weather.temperature.getTemp());
+                temp.setText("" +  Math.round(tmp - 273.15) + "°C");
+
+                inputCelsius.setText(Math.round(tmp-273.15) + "");
+                inputFahrenheit.setText(Math.round(1.8 * (tmp-273.15) + 32) + "");
+
+                reset.setVisibility(View.VISIBLE);
             }
         }
     }

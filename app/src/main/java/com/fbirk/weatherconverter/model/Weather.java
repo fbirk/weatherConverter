@@ -11,6 +11,8 @@
  */
 package com.fbirk.weatherconverter.model;
 
+import android.graphics.Bitmap;
+
 /*
  * Copyright (C) 2013 Surviving with Android (http://www.survivingwithandroid.com)
  *
@@ -36,7 +38,7 @@ public class Weather {
     public Snow snow = new Snow()	;
     public Clouds clouds = new Clouds();
 
-    public byte[] iconData;
+    public Bitmap iconData;
 
     public  class CurrentCondition {
         private int weatherId;
