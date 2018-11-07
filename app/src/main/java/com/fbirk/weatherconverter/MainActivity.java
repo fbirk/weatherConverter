@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        Snackbar.make(findViewById(R.id.mainView), "Call!", Snackbar.LENGTH_SHORT).show();
+
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -70,6 +72,19 @@ public class MainActivity extends AppCompatActivity {
                 permissionGranted = false;
                 System.err.println("Permission denied!");
                 Snackbar.make(findViewById(R.id.mainView), "You Denied permission", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if ( ContextCompat.checkSelfPermission( this, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+
+            ActivityCompat.requestPermissions( this, new String[] {  Manifest.permission.ACCESS_FINE_LOCATION  },
+                    PERMISSION_REQUEST_CODE);
+        } else {
+            Snackbar.make(findViewById(R.id.mainView), "What?!", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -169,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
 
                     JSONWeatherTask task = new JSONWeatherTask();
                     task.execute(new String[]{payload});
+                } else {
+                    onResume();
+                    Snackbar.make(findViewById(R.id.mainView), "Permission Granted = False", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -182,8 +200,6 @@ public class MainActivity extends AppCompatActivity {
             String data = ((new WeatherHttpClient()).getWeatherData(params[0], key));
             try {
                 weather = JSONWeatherParser.getWeather(data);
-
-                System.out.println("Got data");
 
                 // Let's retrieve the icon
                 weather.iconData = ((new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));

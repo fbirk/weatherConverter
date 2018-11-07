@@ -108,12 +108,9 @@ public class SimpleLocation implements LocationListener  {
                         return location;
                     }
                 } else if(isGPSEnabled)  {
-                    System.out.println("TEEEEEEEEEESSSSSSSSST");
 
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
-                    System.out.println("HALLLLLLOOOOOOOOO");
-                    System.out.println(locationManager.toString());
                     if (locationManager != null)  {
                         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         return location;
@@ -121,7 +118,7 @@ public class SimpleLocation implements LocationListener  {
                 }
             }
         } catch (Exception ex)  {
-
+            System.err.println(ex.getMessage());
         }
         return null;
     }
